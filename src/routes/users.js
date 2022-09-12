@@ -9,7 +9,7 @@ router
 .post('/login',login)
 .post('/refersh-token', refreshToken)
 .get('/profile',protect, profile)
-// .get('/', selectAll)
+.get('/', selectAll)
 
 
 module.exports = router

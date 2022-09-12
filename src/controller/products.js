@@ -9,12 +9,26 @@ const productController = {
   getAllProduct: async(req, res) => {
     try{
       const page = Number(req.query.page) || 1
-      const limit = Number(req.query.limit) || 5
+      const limit = Number(req.query.limit) || 20;
       const offset = (page - 1) * limit
       const sortby = req.query.sortby || 'name'
       const sort = req.query.sort || "ASC"
-      const result = await selectAll({limit,offset,sort,sortby})
       const {rows: [count]} = await countData()
+      const search = req.query.search;
+      let querySearch = '';
+      if (search) {
+          querySearch =  `where name ILIKE '%${search}%'` ;
+      }
+      // const cari = querySearch.toLowerCase();
+
+      const result = await selectAll({
+        limit,
+        offset,
+        sort,
+        sortby,
+        querySearch
+      
+      })
       const totalData = parseInt(count.count)
       const totalPage = Math.ceil(totalData/limit)
       const pagination ={     
@@ -50,7 +64,7 @@ const productController = {
     const PORT = process.env.PORT || 8080
     const DB_HOST = process.env.DB_HOST || 'localhost'
     const photo = req.file.filename;
-    const { name, stock, price, description, category_id, transaksi_id} = req.body
+    const { name, stock, price, merk, description, category_id, transaksi_id} = req.body
     const {rows: [count]} = await countData()
     const id = Number(count.count) + 1;
 
@@ -60,6 +74,7 @@ const productController = {
       description,
       stock,
       price,
+      merk,
       category_id,
       transaksi_id,
       photo:`http://${DB_HOST}:${PORT}/img/${photo}`
@@ -77,7 +92,7 @@ const productController = {
       const DB_HOST = process.env.DB_HOST || 'localhost'
       const id = Number(req.params.id)
       const photo = req.file.filename;
-      const { name, stock, price, category_id, transaksi_id, description } = req.body
+      const { name, stock, price, category_id, merk, transaksi_id, description } = req.body
       const {rowCount} = await findId(id)
       if(!rowCount){
         return next(createError(403,"ID is Not Found"))
@@ -88,6 +103,7 @@ const productController = {
         description,
         stock,
         price,
+        merk,
         category_id,
         transaksi_id,
         photo:`http://${DB_HOST}:${PORT}/img/${photo}`

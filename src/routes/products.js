@@ -7,11 +7,11 @@ const { protect, roles } = require('../middlewares/auth')
 const { cacheProduct, clearCacheProductDetail } = require('../middlewares/redis')
 
 router
-  .get('/cari', protect, roles, searching)
-  .get('/', protect, roles, getAllProduct)
-  .get('/:id', protect, roles, cacheProduct, getProduct)
-  .post('/',protect, roles,  upload.single('photo'), insertProduct)
-  .put('/:id', protect, roles, clearCacheProductDetail, upload.single('photo'), updateProduct)
-  .delete('/:id', protect, roles, clearCacheProductDetail, deleteProduct)
+  .get('/cari', searching)
+  .get('/', getAllProduct)
+  .get('/:id', cacheProduct, getProduct)
+  .post('/', upload.single('photo'), insertProduct)
+  .put('/:id', clearCacheProductDetail, upload.single('photo'), updateProduct)
+  .delete('/:id', clearCacheProductDetail, deleteProduct)
 
 module.exports = router

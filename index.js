@@ -14,7 +14,7 @@ const transaksi_detailRouter = require('./src/routes/transaksi_detail')
 
 app.use(express.json())
 app.use(cors())
-app.use(helmet())
+// app.use(helmet())
 app.use(morgan('dev'))
 
 app.use('/users', userRouter )
